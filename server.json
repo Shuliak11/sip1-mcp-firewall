@@ -1,0 +1,23 @@
+{
+  "$schema": "https://modelcontextprotocol.io/schemas/2025-09/server.schema.json",
+  "name": "io.github.Shuliak11/sip1-mcp-firewall",
+  "description": "SHULIAK SIP-1 v2.6.0 Zero-Egress MCP Firewall: 9/9 NIST CAVP FF1 + OWASP MCP05/06 Guard.",
+  "version": "2.6.0",
+  "repository": {
+    "url": "https://github.com/Shuliak11/sip1-mcp-firewall",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registry_name": "npm",
+      "name": "@shuliak-corp/sip1-mcp",
+      "version": "2.6.0",
+      "runtime": "node",
+      "transport": [
+        {
+          "type": "stdio"
+        }
+      ]
+    }
+  ]
+}

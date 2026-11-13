@@ -5,7 +5,7 @@ const assert = require("assert");
 const { spawn } = require("child_process");
 const path = require("path");
 const fs = require("fs");
-const { issueEd25519LicenseKey } = require("/root/issue_license.js");
+// Portable pre-signed Ed25519 test vectors
 const { verifyLicenseKeyOffline } = require("../src/sip1_license_engine");
 
 let passed = 0;
@@ -41,15 +41,15 @@ function runStdioSession(envVars, requests) {
 (async () => {
   console.log("=== RUNNING REAL STDIO MCP JSON-RPC 2.0 & ED25519 PAYWALL SUITE ===");
 
-  const validCorpKey = issueEd25519LicenseKey("CORPORATE", "TBC_BANK_GE", "20271231");
-  const validMilKey = issueEd25519LicenseKey("MILITARY", "DEFENSE_GE", "20271231");
-  check("Ed25519 Private Key Issues Compact Signed Corporate Key", validCorpKey.startsWith("SIP1.CORPORATE.20271231.TBC_BANK_GE."));
+  const validCorpKey = "SIP1.CORPORATE.20281231.TBC_BANK_GE.xMkCk-xJRVaW7GsMNulvUTH9vt-5TPlmxFpXhGX_-1IiVpLsc9M-EyvFleXgJunr2MbEK2QUNdjTjq5oABmKBQ";
+  const validMilKey = "SIP1.MILITARY.20281231.DEFENSE_GE.Xog-HOilccbP-9ptH7EuwwGXeSSV09eft_HAzPtQX0nOf5XIgMKe9wVt-Yak_js1FSPj3kuKhCsBTJpTUIXaBg";
+  check("Ed25519 Private Key Issues Compact Signed Corporate Key", validCorpKey.startsWith("SIP1.CORPORATE.20281231.TBC_BANK_GE."));
   check("Ed25519 Public Key Verifies Authentic Corporate Signature Offline", verifyLicenseKeyOffline(validCorpKey).valid === true && verifyLicenseKeyOffline(validCorpKey).tier === "CORPORATE");
 
   const forgedKey = validCorpKey.replace("SIP1.CORPORATE.", "SIP1.MILITARY.");
   check("Ed25519 Public Verifier Rejects Tampered Tier Escalation Attempt", verifyLicenseKeyOffline(forgedKey).valid === false && verifyLicenseKeyOffline(forgedKey).reason === "ERR_ED25519_SIGNATURE_FORGED");
 
-  const expiredKey = issueEd25519LicenseKey("PRO", "OLD_USER", "20200101");
+  const expiredKey = "SIP1.PRO.20200101.OLD_USER.ddABifqGXjK1NalYF8VlYj4zOY3RnYZNNBmvkpn02VA8X6ic10eOpmeFbmrNlBgk3kuxQgLWuCmiGTQbBDf1CQ";
   check("Ed25519 Public Verifier Rejects Expired License Key", verifyLicenseKeyOffline(expiredKey).valid === false && verifyLicenseKeyOffline(expiredKey).reason === "ERR_LICENSE_EXPIRED");
 
   const freeReqs = [

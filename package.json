@@ -1,25 +1,43 @@
 {
   "name": "@shuliak-corp/sip1-mcp",
-  "version": "2.5.1",
-  "description": "SHULIAK SIP-1 Zero-Egress stdio & Streamable HTTP Firewall for Model Context Protocol (MCP)",
+  "version": "2.6.0",
+  "mcpName": "io.github.Shuliak11/sip1-mcp-firewall",
+  "description": "SHULIAK SIP-1 v2.6.0 Zero-Egress stdio & HTTP Firewall for Model Context Protocol (MCP). 9/9 NIST CAVP FF1 Verified + OWASP MCP05/06 Guard. DOI: 10.5281/zenodo.24159380",
   "main": "src/sip1_mcp_firewall.js",
   "bin": {
-    "sip1-mcp": "./bin/sip1-mcp.js"
+    "sip1-mcp": "bin/sip1-mcp.js"
   },
+  "files": [
+    "src/",
+    "bin/",
+    "dist/",
+    "tests/",
+    "server.json",
+    "glama.json",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
-    "test": "node tests/run_mcp_protocol_suite.js"
+    "start": "node bin/sip1-mcp.js",
+    "test": "node tests/run_nist_cavp_kat.js && node tests/run_mcp_protocol_suite.js && node tests/run_day5_mcp_suite.js"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Shuliak11/sip1-mcp-firewall.git"
+  },
+  "homepage": "https://shuliak.dev",
   "keywords": [
     "mcp",
     "model-context-protocol",
-    "security",
+    "ai-security",
     "dlp",
-    "ff1",
-    "fpe",
+    "format-preserving-encryption",
+    "nist-ff1",
     "owasp-mcp",
-    "claude",
-    "cursor"
+    "aibom",
+    "eu-ai-act",
+    "nist-800-171"
   ],
-  "author": "Dmitrii Shuliak <hq@shuliak.dev> (https://shuliak.dev)",
+  "author": "Dmitrii Shuliak <hq@shuliak.dev> (https://orcid.org/0009-0005-1272-0368)",
   "license": "Apache-2.0"
 }
