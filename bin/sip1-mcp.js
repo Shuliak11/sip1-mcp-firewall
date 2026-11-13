@@ -76,22 +76,26 @@ const MCP_TOOLS = [
         contour: { type: "string", enum: ["PERSONAL", "CORPORATE", "MILITARY"] }
       },
       required: ["text"]
-    }
+    },
+    annotations: { title: "SIP-1 Scrub Payload", readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   },
   {
     name: "sip1_rehydrate_response",
     description: "Restore synthetic SIP-1 twins and tokens back to original plaintext values in memory.",
-    inputSchema: { type: "object", properties: { maskedText: { type: "string" } }, required: ["maskedText"] }
+    inputSchema: { type: "object", properties: { maskedText: { type: "string" } }, required: ["maskedText"] },
+    annotations: { title: "SIP-1 Rehydrate", readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   },
   {
     name: "sip1_audit_jsonrpc",
     description: "Inspect MCP JSON-RPC 2.0 tool arguments for OWASP MCP05/06 Path Traversal, Command Injection, Prototype Pollution, and Zero-Width Unicode.",
-    inputSchema: { type: "object", properties: { payload: { type: "string" } }, required: ["payload"] }
+    inputSchema: { type: "object", properties: { payload: { type: "string" } }, required: ["payload"] },
+    annotations: { title: "SIP-1 Audit JSON-RPC", readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   },
   {
     name: "sip1_generate_aibom",
     description: "Generate a cryptographically signed CycloneDX AI Bill of Materials (AIBOM) & SHA-256 Merkle attestation for EU AI Act, SOC 2, and NIST 800-171 compliance.",
-    inputSchema: { type: "object", properties: { organization: { type: "string" } }, required: ["organization"] }
+    inputSchema: { type: "object", properties: { organization: { type: "string" } }, required: ["organization"] },
+    annotations: { title: "SIP-1 Generate AIBOM", readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: false }
   },
   {
     name: "sip1_license_status",

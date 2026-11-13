@@ -1,6 +1,6 @@
 {
   "name": "@shuliak-corp/sip1-mcp",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "mcpName": "io.github.Shuliak11/sip1-mcp-firewall",
   "description": "SHULIAK SIP-1 v2.6.0 Zero-Egress stdio & HTTP Firewall for Model Context Protocol (MCP). 9/9 NIST CAVP FF1 Verified + OWASP MCP05/06 Guard. DOI: 10.5281/zenodo.24159380",
   "main": "src/sip1_mcp_firewall.js",
@@ -12,6 +12,7 @@
     "bin/",
     "dist/",
     "tests/",
+    "Dockerfile",
     "server.json",
     "glama.json",
     "README.md",

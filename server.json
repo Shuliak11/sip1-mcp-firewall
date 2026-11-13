@@ -1,23 +1,21 @@
 {
-  "$schema": "https://modelcontextprotocol.io/schemas/2025-09/server.schema.json",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
   "name": "io.github.Shuliak11/sip1-mcp-firewall",
-  "description": "SHULIAK SIP-1 v2.6.0 Zero-Egress MCP Firewall: 9/9 NIST CAVP FF1 + OWASP MCP05/06 Guard.",
-  "version": "2.6.0",
+  "title": "SHULIAK SIP-1 Zero-Egress AI & MCP Firewall",
+  "description": "On-device NIST SP 800-38G FF1 (9/9 CAVP) pseudonymization, OWASP MCP05/06 guard & EU AI Act AIBOM.",
+  "version": "2.6.1",
   "repository": {
     "url": "https://github.com/Shuliak11/sip1-mcp-firewall",
     "source": "github"
   },
   "packages": [
     {
-      "registry_name": "npm",
-      "name": "@shuliak-corp/sip1-mcp",
-      "version": "2.6.0",
-      "runtime": "node",
-      "transport": [
-        {
-          "type": "stdio"
-        }
-      ]
+      "registryType": "npm",
+      "identifier": "@shuliak-corp/sip1-mcp",
+      "version": "2.6.1",
+      "transport": {
+        "type": "stdio"
+      }
     }
   ]
 }
