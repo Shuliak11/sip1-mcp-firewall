@@ -1,0 +1,25 @@
+{
+  "name": "@shuliak-corp/sip1-mcp",
+  "version": "2.5.1",
+  "description": "SHULIAK SIP-1 Zero-Egress stdio & Streamable HTTP Firewall for Model Context Protocol (MCP)",
+  "main": "src/sip1_mcp_firewall.js",
+  "bin": {
+    "sip1-mcp": "./bin/sip1-mcp.js"
+  },
+  "scripts": {
+    "test": "node tests/run_mcp_protocol_suite.js"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "security",
+    "dlp",
+    "ff1",
+    "fpe",
+    "owasp-mcp",
+    "claude",
+    "cursor"
+  ],
+  "author": "Dmitrii Shuliak <hq@shuliak.dev> (https://shuliak.dev)",
+  "license": "Apache-2.0"
+}
