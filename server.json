@@ -3,7 +3,7 @@
   "name": "io.github.Shuliak11/sip1-mcp-firewall",
   "title": "SHULIAK SIP-1 Zero-Egress AI & MCP Firewall",
   "description": "On-device NIST SP 800-38G FF1 (9/9 CAVP) pseudonymization, OWASP MCP05/06 guard & EU AI Act AIBOM.",
-  "version": "2.6.2",
+  "version": "2.6.3",
   "repository": {
     "url": "https://github.com/Shuliak11/sip1-mcp-firewall",
     "source": "github"
@@ -12,7 +12,7 @@
     {
       "registryType": "npm",
       "identifier": "@shuliak-corp/sip1-mcp",
-      "version": "2.6.2",
+      "version": "2.6.3",
       "transport": {
         "type": "stdio"
       }
