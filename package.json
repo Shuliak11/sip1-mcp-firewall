@@ -1,6 +1,6 @@
 {
   "name": "@shuliak-corp/sip1-mcp",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "mcpName": "io.github.Shuliak11/sip1-mcp-firewall",
   "description": "SHULIAK SIP-1 v2.6.0 Zero-Egress stdio & HTTP Firewall for Model Context Protocol (MCP). 9/9 NIST CAVP FF1 Verified + OWASP MCP05/06 Guard. DOI: 10.5281/zenodo.24159380",
   "main": "src/sip1_mcp_firewall.js",
@@ -16,6 +16,9 @@
     "server.json",
     "glama.json",
     "README.md",
+    "CHANGELOG.md",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
     "LICENSE"
   ],
   "scripts": {
@@ -40,5 +43,9 @@
     "nist-800-171"
   ],
   "author": "Dmitrii Shuliak <hq@shuliak.dev> (https://orcid.org/0009-0005-1272-0368)",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {}
 }

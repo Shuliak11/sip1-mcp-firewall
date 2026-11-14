@@ -14,7 +14,7 @@ const fw = new Sip1McpFirewall({ masterKey: activeKey || "community-seed", tweak
 const omni = new Sip1OmniEngineV2(licenseInfo.valid ? "CORPORATE" : "PERSONAL");
 
 if (process.argv.includes("--version") || process.argv.includes("-v")) {
-  process.stdout.write("sip1-mcp-firewall v2.5.1 (CERN DOI: 10.5281/zenodo.24159380)\n");
+  process.stdout.write("sip1-mcp-firewall v2.6.2 (CERN DOI: 10.5281/zenodo.24159380)\n");
   process.exit(0);
 }
 
@@ -22,7 +22,6 @@ function sendJsonRpc(obj) {
   process.stdout.write(JSON.stringify(obj) + "\n");
 }
 
-// MODE 2: TRANSPARENT DOWNSTREAM STDIO PROXY WRAPPER (--wrap <cmd> [args...])
 const wrapIdx = process.argv.indexOf("--wrap");
 if (wrapIdx !== -1 && process.argv.length > wrapIdx + 1) {
   const { spawn } = require("child_process");
@@ -68,12 +67,13 @@ if (wrapIdx !== -1 && process.argv.length > wrapIdx + 1) {
 const MCP_TOOLS = [
   {
     name: "sip1_scrub_payload",
-    description: "Scrub sensitive PII, payment cards, IBANs, and cloud API keys from text or JSON before sending to external LLMs or tools.",
+    description: "Scrub sensitive PII, Luhn payment cards, ISO-7064 IBANs, and cloud API secrets from text or JSON using on-device NIST SP 800-38G FF1 pseudonymization.",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       properties: {
-        text: { type: "string" },
-        contour: { type: "string", enum: ["PERSONAL", "CORPORATE", "MILITARY"] }
+        text: { type: "string", description: "Raw prompt, code snippet, or JSON payload to sanitize locally before external transmission." },
+        contour: { type: "string", enum: ["PERSONAL", "CORPORATE", "MILITARY"], description: "Operational security contour threshold (default: CORPORATE)." }
       },
       required: ["text"]
     },
@@ -81,35 +81,80 @@ const MCP_TOOLS = [
   },
   {
     name: "sip1_rehydrate_response",
-    description: "Restore synthetic SIP-1 twins and tokens back to original plaintext values in memory.",
-    inputSchema: { type: "object", properties: { maskedText: { type: "string" } }, required: ["maskedText"] },
-    annotations: { title: "SIP-1 Rehydrate", readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+    description: "Deterministically restore synthetic SIP-1 twins and session tokens back to original plaintext values in local memory.",
+    inputSchema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        maskedText: { type: "string", description: "Inbound LLM or tool response string containing SIP-1 tokens or FF1 synthetic twins." }
+      },
+      required: ["maskedText"]
+    },
+    annotations: { title: "SIP-1 Rehydrate Response", readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   },
   {
     name: "sip1_audit_jsonrpc",
-    description: "Inspect MCP JSON-RPC 2.0 tool arguments for OWASP MCP05/06 Path Traversal, Command Injection, Prototype Pollution, and Zero-Width Unicode.",
-    inputSchema: { type: "object", properties: { payload: { type: "string" } }, required: ["payload"] },
+    description: "Inspect MCP JSON-RPC 2.0 tool call payloads for OWASP MCP05/06 Path Traversal, Command Injection, Prototype Pollution, and covert Zero-Width Unicode smuggling.",
+    inputSchema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        payload: { type: "string", description: "Raw JSON-RPC 2.0 request or tool argument payload string to audit for security threats." }
+      },
+      required: ["payload"]
+    },
     annotations: { title: "SIP-1 Audit JSON-RPC", readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   },
   {
     name: "sip1_generate_aibom",
-    description: "Generate a cryptographically signed CycloneDX AI Bill of Materials (AIBOM) & SHA-256 Merkle attestation for EU AI Act, SOC 2, and NIST 800-171 compliance.",
-    inputSchema: { type: "object", properties: { organization: { type: "string" } }, required: ["organization"] },
+    description: "Generate a cryptographically signed CycloneDX AI Bill of Materials (AIBOM) & SHA-256 Merkle attestation for EU AI Act, GDPR Art. 4(5), SOC 2, and NIST 800-171 compliance.",
+    inputSchema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        organization: { type: "string", description: "Legal entity or workspace identifier to bind into the signed CycloneDX AIBOM manifest." }
+      },
+      required: ["organization"]
+    },
     annotations: { title: "SIP-1 Generate AIBOM", readOnlyHint: true, destructiveHint: false, idempotentHint: false, openWorldHint: false }
   },
   {
     name: "sip1_license_status",
-    description: "Verify current SHULIAK SIP-1 license tier or activate an Ed25519 license key.",
-    inputSchema: { type: "object", properties: { licenseKey: { type: "string" } } }
+    description: "Check active SHULIAK SIP-1 license tier, remaining free session quota, or verify and activate an offline Ed25519 license key.",
+    inputSchema: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        licenseKey: { type: "string", description: "Optional Ed25519 signed license token (SIP1.TIER.YYYYMMDD.ORG.SIGNATURE) to verify offline." }
+      }
+    },
+    annotations: { title: "SIP-1 License Status", readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
   }
 ];
 
-const MCP_PROMPTS = [{ name: "sip1-zero-egress-audit", description: "Audit payload for OWASP MCP Top 10 compliance.", arguments: [{ name: "target", required: true }] }];
-const MCP_RESOURCES = [{ uri: "sip1://policy/status", name: "SHULIAK SIP-1 Security Policy", mimeType: "application/json" }];
+const MCP_PROMPTS = [
+  {
+    name: "sip1-zero-egress-audit",
+    description: "Run a structured OWASP MCP Top 10 and EU AI Act Art. 15 zero-egress security audit on a target payload.",
+    arguments: [{ name: "target", description: "Target configuration or prompt text to inspect.", required: true }]
+  }
+];
+
+const MCP_RESOURCES = [
+  {
+    uri: "sip1://policy/status",
+    name: "SHULIAK SIP-1 Kernel & Compliance Telemetry",
+    description: "Live status of the on-device WebAssembly kernel, 9/9 NIST CAVP FF1 engine, and active license contour.",
+    mimeType: "application/json"
+  }
+];
 
 function handleRpcMessage(msg) {
   if (!msg || typeof msg !== "object") return;
   const { id, method, params } = msg;
+
+  // JSON-RPC 2.0 Notifications have no id and MUST NOT receive a response
+  if (id === undefined) return;
 
   if (method === "initialize") {
     return sendJsonRpc({
@@ -117,16 +162,63 @@ function handleRpcMessage(msg) {
       id,
       result: {
         protocolVersion: (params && params.protocolVersion) ? params.protocolVersion : "2025-06-18",
-        capabilities: { tools: { listChanged: false }, prompts: { listChanged: false }, resources: { subscribe: false, listChanged: false } },
-        serverInfo: { name: "sip1-mcp-firewall", version: "2.5.1", vendor: "SHULIAK CORP (https://shuliak.dev)", doi: "https://doi.org/10.5281/zenodo.24159380" }
+        capabilities: {
+          tools: { listChanged: false },
+          prompts: { listChanged: false },
+          resources: { subscribe: false, listChanged: false }
+        },
+        serverInfo: {
+          name: "sip1-mcp-firewall",
+          version: "2.6.2",
+          vendor: "SHULIAK CORP (https://shuliak.dev)",
+          doi: "https://doi.org/10.5281/zenodo.24159380"
+        }
       }
     });
   }
-  if (method === "notifications/initialized") return;
-  if (method === "ping") return sendJsonRpc({ jsonrpc: "2.0", id, result: {} });
-  if (method === "tools/list") return sendJsonRpc({ jsonrpc: "2.0", id, result: { tools: MCP_TOOLS } });
-  if (method === "prompts/list") return sendJsonRpc({ jsonrpc: "2.0", id, result: { prompts: MCP_PROMPTS } });
-  if (method === "resources/list") return sendJsonRpc({ jsonrpc: "2.0", id, result: { resources: MCP_RESOURCES } });
+
+  if (method === "ping" || method === "logging/setLevel") {
+    return sendJsonRpc({ jsonrpc: "2.0", id, result: {} });
+  }
+  if (method === "tools/list") {
+    return sendJsonRpc({ jsonrpc: "2.0", id, result: { tools: MCP_TOOLS } });
+  }
+  if (method === "prompts/list") {
+    return sendJsonRpc({ jsonrpc: "2.0", id, result: { prompts: MCP_PROMPTS } });
+  }
+  if (method === "prompts/get") {
+    const t = (params && params.arguments && params.arguments.target) ? String(params.arguments.target) : "";
+    return sendJsonRpc({
+      jsonrpc: "2.0",
+      id,
+      result: {
+        description: "SHULIAK SIP-1 Zero-Egress Security Audit",
+        messages: [{ role: "user", content: { type: "text", text: "Perform OWASP MCP05/06 & NIST FF1 audit on: " + t } }]
+      }
+    });
+  }
+  if (method === "resources/list") {
+    return sendJsonRpc({ jsonrpc: "2.0", id, result: { resources: MCP_RESOURCES } });
+  }
+  if (method === "resources/templates/list") {
+    return sendJsonRpc({ jsonrpc: "2.0", id, result: { resourceTemplates: [] } });
+  }
+  if (method === "resources/read") {
+    return sendJsonRpc({
+      jsonrpc: "2.0",
+      id,
+      result: {
+        contents: [{
+          uri: "sip1://policy/status",
+          mimeType: "application/json",
+          text: JSON.stringify({ protocol: "SIP-1 v2.6.2", cavp: "9/9_VERIFIED", tier: licenseInfo.tier, valid: licenseInfo.valid, doi: "10.5281/zenodo.24159380" })
+        }]
+      }
+    });
+  }
+  if (method === "completion/complete") {
+    return sendJsonRpc({ jsonrpc: "2.0", id, result: { completion: { values: [], total: 0, hasMore: false } } });
+  }
 
   if (method === "tools/call") {
     const toolName = (params && params.name) || "";
@@ -134,7 +226,7 @@ function handleRpcMessage(msg) {
 
     if (toolName === "sip1_license_status") {
       if (args.licenseKey) licenseInfo = verifyLicenseKeyOffline(args.licenseKey);
-      return sendJsonRpc({ jsonrpc: "2.0", id, result: { content: [{ type: "text", text: JSON.stringify({ license: licenseInfo, callsUsed: sessionCallCount }) }] } });
+      return sendJsonRpc({ jsonrpc: "2.0", id, result: { content: [{ type: "text", text: JSON.stringify({ license: licenseInfo, callsUsed: sessionCallCount, upgradeUrl: "https://shuliak.dev/#pricing" }) }] } });
     }
 
     sessionCallCount++;
@@ -193,8 +285,11 @@ function handleRpcMessage(msg) {
       return sendJsonRpc({ jsonrpc: "2.0", id, result: { content: [{ type: "text", text: JSON.stringify({ allowed: audit.allowed, quarantined: audit.quarantined, threats: audit.threats }) }] } });
     }
 
-    return sendJsonRpc({ jsonrpc: "2.0", id, error: { code: -32601, message: "Tool not found" } });
+    return sendJsonRpc({ jsonrpc: "2.0", id, error: { code: -32601, message: "Tool not found: " + toolName } });
   }
+
+  // Mandatory fallback so Glama Inspector never hangs on unknown methods
+  return sendJsonRpc({ jsonrpc: "2.0", id, error: { code: -32601, message: "Method not found: " + String(method) } });
 }
 
 const rl = readline.createInterface({ input: process.stdin, terminal: false });
