@@ -1,7 +1,7 @@
 # @shuliak-corp/sip1-mcp — SHULIAK SIP-1 v2.6 Zero-Egress AI & MCP Firewall
 
 [![CERN Zenodo DOI](https://img.shields.io/badge/CERN_Zenodo_DOI-10.5281%2Fzenodo.24159380-0A66C2)](https://doi.org/10.5281/zenodo.24159380)
-[![npm version](https://img.shields.io/npm/v/@shuliak-corp/sip1-mcp.svg)](https://www.npmjs.com/package/@shuliak-corp/sip1-mcp)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/16690/badge)](https://www.bestpractices.dev/projects/16690) [![npm version](https://img.shields.io/npm/v/@shuliak-corp/sip1-mcp.svg)](https://www.npmjs.com/package/@shuliak-corp/sip1-mcp)
 [![NIST CAVP](https://img.shields.io/badge/NIST_SP_800--38G_FF1-9%2F9_CAVP_Vectors_Verified-emerald)](https://github.com/Shuliak11/sip1-mcp-firewall)
 
 **Author:** Dmitrii Shuliak (Founder & Chief Systems Architect, **SHULIAK CORP**)
