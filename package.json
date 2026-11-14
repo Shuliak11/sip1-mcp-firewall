@@ -23,7 +23,7 @@
   ],
   "scripts": {
     "start": "node bin/sip1-mcp.js",
-    "test": "node tests/run_nist_cavp_kat.js && node tests/run_mcp_protocol_suite.js && node tests/run_day5_mcp_suite.js"
+    "test": "node tests/run_static_security_audit.js && node tests/run_nist_cavp_kat.js && node tests/run_mcp_protocol_suite.js && node tests/run_day5_mcp_suite.js"
   },
   "repository": {
     "type": "git",
