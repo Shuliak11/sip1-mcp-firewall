@@ -1,0 +1,42 @@
+cff-version: 1.2.0
+message: "If you use SHULIAK SIP software or specifications in research or enterprise compliance, please cite the software and foundational specifications below."
+title: "SHULIAK SIP: Stateless Format-Preserving Pseudonymization, AST Quarantine, and Evidentiary AI Agent Security"
+type: software
+version: 2.6.3
+date-released: "2026-11-15"
+license: Apache-2.0
+url: "https://shuliak.dev"
+repository-code: "https://github.com/Shuliak11/sip1-mcp-firewall"
+doi: 10.5281/zenodo.24159380
+keywords:
+  - model-context-protocol
+  - format-preserving-encryption
+  - nist-ff1
+  - zero-egress
+  - eu-ai-act
+  - gdpr-compliance
+authors:
+  - family-names: Shuliak
+    given-names: Dmitrii
+    affiliation: "SHULIAK CORP"
+    orcid: "https://orcid.org/0009-0005-1272-0368"
+references:
+  - type: standard
+    title: "Shuliak Isolation Protocol (SIP-1): Stateless Format-Preserving Pseudonymization and AST Quarantine for Local AI Agent Transports"
+    authors:
+      - family-names: Shuliak
+        given-names: Dmitrii
+    year: 2026
+    month: 11
+    institution:
+      name: "Internet Engineering Task Force (IETF)"
+    number: "draft-shuliak-sip-zero-egress-00"
+    url: "https://datatracker.ietf.org/doc/draft-shuliak-sip-zero-egress/"
+  - type: article
+    title: "Shuliak Isolation Protocol (SIP-1): Stateless Checksum-Invariant Format-Preserving Pseudonymization and Sub-Millisecond AST Sanitization"
+    authors:
+      - family-names: Shuliak
+        given-names: Dmitrii
+    year: 2026
+    journal: "Elsevier SSRN Electronic Journal"
+    url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=7704879"
