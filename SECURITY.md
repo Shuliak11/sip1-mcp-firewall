@@ -1,11 +1,7 @@
-# Security Policy — SHULIAK SIP-1
+# Security Policy - SHULIAK SIP (@shuliak-corp/sip1-mcp)
 
-## Supported Versions
-| Version | Supported | NIST SP 800-38G CAVP |
-| --- | --- | --- |
-| 2.6.x | Yes | 9/9 Official Vectors Verified |
-| < 2.6.0 | No | Upgrade to 2.6.2+ |
-
-## Reporting a Vulnerability
-Report security issues privately to **hq@shuliak.dev** (SHULIAK CORP, Batumi, Georgia).
-Critical issues are triaged within 24 hours with deterministic patch verification.
+- Supported release: `>= 3.1.0` (Zero-dependency Node.js >= 20 ESM OpenSSL engine, 0 outbound sockets, 251/251 deterministic checks passing).
+- Versions `< 3.1.0` are deprecated prototypes.
+- Pinned Sovereign Root Ed25519 Public Key: `AZ9wSMieP72MvUUTcxHaCE0ssL0eLXENyRgKRvPV7Qg`.
+- Report vulnerabilities privately to `security@shuliak.dev` or `hq@shuliak.dev` (24h acknowledgment, <= 72h critical patch SLA).
+- Canonical disclosure file: https://shuliak.dev/.well-known/security.txt

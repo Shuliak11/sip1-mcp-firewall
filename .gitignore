@@ -2,3 +2,12 @@ node_modules/
 .npmrc
 *.log
 .DS_Store
+.sip/
+*.pem
+mcp.pem
+mcp-publisher
+*.tgz
+*.mcpb
+*.tmp*
+mcp_pub.tgz
+*.key

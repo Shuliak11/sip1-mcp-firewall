@@ -1,51 +1,77 @@
 {
   "name": "@shuliak-corp/sip1-mcp",
-  "version": "2.6.3",
-  "mcpName": "io.github.Shuliak11/sip1-mcp-firewall",
-  "description": "SHULIAK SIP-1 v2.6.0 Zero-Egress stdio & HTTP Firewall for Model Context Protocol (MCP). 9/9 NIST CAVP FF1 Verified + OWASP MCP05/06 Guard. DOI: 10.5281/zenodo.24159380",
-  "main": "src/sip1_mcp_firewall.js",
-  "bin": {
-    "sip1-mcp": "bin/sip1-mcp.js"
-  },
+  "version": "3.1.0",
+  "description": "Zero-egress local MCP security firewall, RFC 8785 schema lock, NIST SP 800-38G FF1 Luhn/IBAN twins, AST blast-radius guard, and GDPR Art. 17 ISEP cryptographic shredding engine.",
+  "type": "module",
+  "license": "Apache-2.0",
   "files": [
     "src/",
-    "bin/",
-    "dist/",
-    "tests/",
+    "action.yml",
     "Dockerfile",
     "server.json",
     "glama.json",
+    "LICENSE",
     "README.md",
-    "CHANGELOG.md",
     "SECURITY.md",
-    "CONTRIBUTING.md",
-    "LICENSE"
+    "CITATION.cff"
   ],
-  "scripts": {
-    "start": "node bin/sip1-mcp.js",
-    "test": "node tests/run_static_security_audit.js && node tests/run_nist_cavp_kat.js && node tests/run_mcp_protocol_suite.js && node tests/run_day5_mcp_suite.js"
+  "bin": {
+    "sip1-mcp": "./src/cli.mjs"
   },
+  "exports": {
+    ".": "./src/cli.mjs",
+    "./jcs": "./src/core/jcs.mjs",
+    "./crypto": "./src/core/crypto-primitives.mjs",
+    "./io": "./src/core/workspace-io.mjs",
+    "./bus": "./src/core/pipeline-bus.mjs",
+    "./discovery": "./src/stage1/config-discovery.mjs",
+    "./scanner": "./src/stage1/audit-scanner.mjs",
+    "./lock": "./src/stage1/schema-lock.mjs",
+    "./guard": "./src/stage2/blast-radius-guard.mjs",
+    "./warrant": "./src/stage2/warrant-engine.mjs",
+    "./finops": "./src/stage2/finops-fuse.mjs",
+    "./undo": "./src/stage2/shadow-undo.mjs",
+    "./canary": "./src/stage2/canary-trap.mjs",
+    "./ff1": "./src/stage3/nist-ff1-twins.mjs",
+    "./enclave": "./src/stage3/enclave-adapter.mjs",
+    "./isep": "./src/stage3/isep-engine.mjs",
+    "./license": "./src/stage4/license-authority.mjs",
+    "./aibom": "./src/stage4/cyclonedx-aibom.mjs",
+    "./attest": "./src/stage4/auditor-attestation.mjs",
+    "./pdf": "./src/stage4/pdf-generator.mjs",
+    "./pr-gate": "./src/stage4/pr-cicd-gate.mjs",
+    "./selftest": "./src/stage4/zero-egress-selftest.mjs",
+    "./mcp-server": "./src/stage5/mcp-stdio-server.mjs",
+    "./wrap-proxy": "./src/stage5/mcp-wrap-proxy.mjs",
+    "./demo-bench": "./src/stage5/instant-demo-bench.mjs",
+    "./ifc": "./src/stage2/ifc-trifecta-bus.mjs",
+    "./office-bridge": "./src/stage5/office-clinical-bridge.mjs",
+    "./shield": "./src/stage1/auto-shield.mjs",
+    "./merkle": "./src/stage3/rfc9162-merkle.mjs",
+    "./mdm": "./src/stage4/mdm-fleet.mjs"
+  },
+  "scripts": {
+    "test": "node --test --test-concurrency=1 test/stage1.test.mjs test/stage2.test.mjs test/stage3.test.mjs test/stage4.test.mjs test/stage5.test.mjs test/v301-hardening.test.mjs test/v310-sector-and-bridge.test.mjs test/v310-ultimate-7contour.test.mjs test/v310-diamond-audit.test.mjs test/v310-diverse-chaos.test.mjs test/v310-tabular-enterprise.test.mjs test/v310-redteam-audit.test.mjs test/v310-phase2-live-pipes.test.mjs test/v311-gold-node1.test.mjs test/v311-gold-node2.test.mjs",
+    "build": "node --check src/cli.mjs"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {},
+  "mcpName": "io.github.Shuliak11/sip1-mcp-firewall",
+  "author": "Dmitrii Shuliak <hq@shuliak.dev> (https://orcid.org/0009-0005-1272-0368)",
+  "homepage": "https://shuliak.dev",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Shuliak11/sip1-mcp-firewall.git"
   },
-  "homepage": "https://shuliak.dev",
-  "keywords": [
-    "mcp",
-    "model-context-protocol",
-    "ai-security",
-    "dlp",
-    "format-preserving-encryption",
-    "nist-ff1",
-    "owasp-mcp",
-    "aibom",
-    "eu-ai-act",
-    "nist-800-171"
-  ],
-  "author": "Dmitrii Shuliak <hq@shuliak.dev> (https://orcid.org/0009-0005-1272-0368)",
-  "license": "Apache-2.0",
-  "engines": {
-    "node": ">=20.0.0"
+  "bugs": {
+    "url": "https://github.com/Shuliak11/sip1-mcp-firewall/issues",
+    "email": "hq@shuliak.dev"
   },
-  "dependencies": {}
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "sideEffects": false
 }

@@ -1,0 +1,76 @@
+name: 'SHULIAK SIP v3.0 MCP Security Gate'
+description: 'Zero-egress MCP supply-chain risk scanner, RFC 8785 JCS schema lock verifier & GHAS-free PR scorecard (@shuliak-corp/sip1-mcp v3.1.0).'
+author: 'SHULIAK CORP'
+branding:
+  icon: 'shield'
+  color: 'gray-dark'
+
+inputs:
+  workspace-dir:
+    description: 'Target workspace directory to scan for MCP configurations and .sip/sip2.lock.json'
+    required: false
+    default: '.'
+  fail-on:
+    description: 'Minimum letter grade threshold that fails the CI gate (A, B, C, D, or F)'
+    required: false
+    default: 'D'
+  sarif-output:
+    description: 'Optional path to write OASIS SARIF 2.1.0 report (empty disables file write)'
+    required: false
+    default: ''
+
+outputs:
+  score:
+    description: 'Deterministic 0-100 MCP security posture score'
+    value: ${{ steps.sip_audit.outputs.score }}
+  grade:
+    description: 'Letter grade (A+, A, B, C, D, or F)'
+    value: ${{ steps.sip_audit.outputs.grade }}
+  findings-count:
+    description: 'Total static + schema-lock drift findings detected'
+    value: ${{ steps.sip_audit.outputs.findings_count }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js >= 20
+      uses: actions/setup-node@39370e3970a6d050c480ffad7ff0ed4d3fdee5af # v4.1.0
+      with:
+        node-version: '22'
+
+    - name: Run SHULIAK SIP v3.1.0 Zero-Egress MCP Security Gate
+      id: sip_audit
+      shell: bash
+      env:
+        SIP_WORKSPACE_DIR: ${{ inputs.workspace-dir }}
+        SIP_FAIL_ON: ${{ inputs.fail-on }}
+        SIP_SARIF_OUT: ${{ inputs.sarif-output }}
+        NO_COLOR: '1'
+      run: |
+        set -euo pipefail
+        CLI_CMD=(npx -y @shuliak-corp/sip1-mcp@3.1.0)
+        if [ -f "${GITHUB_ACTION_PATH}/src/cli.mjs" ]; then
+          CLI_CMD=(node "${GITHUB_ACTION_PATH}/src/cli.mjs")
+        fi
+
+        JSON_REPORT="$("${CLI_CMD[@]}" audit --dir "${SIP_WORKSPACE_DIR}" --no-global --json || true)"
+        SCORE="$(printf '%s' "${JSON_REPORT}" | node -e 'const fs=require("node:fs"); const j=JSON.parse(fs.readFileSync(0,"utf8")); process.stdout.write(String(j.score ?? 0));')"
+        GRADE="$(printf '%s' "${JSON_REPORT}" | node -e 'const fs=require("node:fs"); const j=JSON.parse(fs.readFileSync(0,"utf8")); process.stdout.write(String(j.grade ?? "F"));')"
+        FINDINGS="$(printf '%s' "${JSON_REPORT}" | node -e 'const fs=require("node:fs"); const j=JSON.parse(fs.readFileSync(0,"utf8")); process.stdout.write(String((j.findings || []).length));')"
+
+        echo "score=${SCORE}" >> "${GITHUB_OUTPUT}"
+        echo "grade=${GRADE}" >> "${GITHUB_OUTPUT}"
+        echo "findings_count=${FINDINGS}" >> "${GITHUB_OUTPUT}"
+
+        if [ -n "${SIP_SARIF_OUT}" ]; then
+          "${CLI_CMD[@]}" audit --dir "${SIP_WORKSPACE_DIR}" --no-global --format sarif > "${SIP_SARIF_OUT}" || true
+        fi
+
+        set +e
+        MD_SCORECARD="$("${CLI_CMD[@]}" audit --dir "${SIP_WORKSPACE_DIR}" --no-global --format markdown-pr --ci --fail-on "${SIP_FAIL_ON}")"
+        GATE_EXIT=$?
+        set -e
+
+        printf '%s\n' "${MD_SCORECARD}" >> "${GITHUB_STEP_SUMMARY}"
+        printf '%s\n' "${MD_SCORECARD}"
+        exit "${GATE_EXIT}"

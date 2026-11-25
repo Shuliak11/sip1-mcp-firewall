@@ -1,9 +1,10 @@
 {
-  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.Shuliak11/sip1-mcp-firewall",
-  "title": "SHULIAK SIP-1 Zero-Egress AI & MCP Firewall",
-  "description": "On-device NIST SP 800-38G FF1 (9/9 CAVP) pseudonymization, OWASP MCP05/06 guard & EU AI Act AIBOM.",
-  "version": "2.6.3",
+  "title": "SHULIAK SIP-1 Zero-Egress MCP Firewall",
+  "description": "Local zero-egress MCP firewall with NIST FF1 pseudonymization and AST prompt-injection defense",
+  "version": "3.1.0",
+  "websiteUrl": "https://shuliak.dev",
   "repository": {
     "url": "https://github.com/Shuliak11/sip1-mcp-firewall",
     "source": "github"
@@ -11,8 +12,55 @@
   "packages": [
     {
       "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
       "identifier": "@shuliak-corp/sip1-mcp",
-      "version": "2.6.3",
+      "version": "3.1.0",
+      "runtimeHint": "npx",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "SIP_LICENSE_KEY",
+          "description": "Optional offline Ed25519 SIP3 license key",
+          "format": "string",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    },
+    {
+      "registryType": "mcpb",
+      "identifier": "https://github.com/Shuliak11/sip1-mcp-firewall/releases/download/v3.1.0/sip1-enterprise-all-3.1.0.mcpb",
+      "version": "3.1.0",
+      "fileSha256": "e4b3afb56c0cb86d945d99d1620dccd82bdf6a221fcb0b54f6ccb0b0232423b3",
+      "transport": {
+        "type": "stdio"
+      }
+    },
+    {
+      "registryType": "mcpb",
+      "identifier": "https://github.com/Shuliak11/sip1-mcp-firewall/releases/download/v3.1.0/sip1-hipaa-clinical-3.1.0.mcpb",
+      "version": "3.1.0",
+      "fileSha256": "9e8606063206c4d6c4096f12107e0b31ee706548dc24d14a59bc09a5d2cada51",
+      "transport": {
+        "type": "stdio"
+      }
+    },
+    {
+      "registryType": "mcpb",
+      "identifier": "https://github.com/Shuliak11/sip1-mcp-firewall/releases/download/v3.1.0/sip1-legal-tax-3.1.0.mcpb",
+      "version": "3.1.0",
+      "fileSha256": "f39ace2e9f815299684ed6d7b913a2706a7151badab14d911f8f62d40cd42c0b",
+      "transport": {
+        "type": "stdio"
+      }
+    },
+    {
+      "registryType": "mcpb",
+      "identifier": "https://github.com/Shuliak11/sip1-mcp-firewall/releases/download/v3.1.0/sip1-pci-dora-3.1.0.mcpb",
+      "version": "3.1.0",
+      "fileSha256": "0d850ae29d2670384762ecb919ec4396cf78b3c8f3de0363367b65250e9663d0",
       "transport": {
         "type": "stdio"
       }

@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use SHULIAK SIP software or specifications in research or enterprise compliance, please cite the software and foundational specifications below."
 title: "SHULIAK SIP: Stateless Format-Preserving Pseudonymization, AST Quarantine, and Evidentiary AI Agent Security"
 type: software
-version: 2.6.3
-date-released: "2026-11-15"
+version: 3.1.0
+date-released: "2026-11-25"
 license: Apache-2.0
 url: "https://shuliak.dev"
 repository-code: "https://github.com/Shuliak11/sip1-mcp-firewall"
