@@ -1,9 +1,12 @@
 name: Release npm & Official MCP Registry
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "v*.*.*"
+    inputs:
+      publish_live:
+        description: Publish live to npm & MCP Registry
+        type: boolean
+        required: true
+        default: false
 permissions: {}
 jobs:
   publish:
@@ -23,24 +26,66 @@ jobs:
           package-manager-cache: false
       - name: Upgrade npm for OIDC Publishing
         run: npm install -g npm@latest
+      - name: Stage v3.1.0 release artifacts
+        run: |
+          set -euo pipefail
+          D="$RUNNER_TEMP/release-v3.1.0"
+          mkdir -p "$D"
+          cp server.json "$D/server.json"
+          B="https://github.com/Shuliak11/sip1-mcp-firewall/releases/download/v3.1.0"
+          for f in SHA256SUMS.txt \
+            shuliak-corp-sip1-mcp-3.1.0.tgz \
+            sip1-enterprise-all-3.1.0.mcpb \
+            sip1-hipaa-clinical-3.1.0.mcpb \
+            sip1-legal-tax-3.1.0.mcpb \
+            sip1-pci-dora-3.1.0.mcpb; do
+            curl -fsSL "$B/$f" -o "$D/$f"
+          done
+          (cd "$D" && sha256sum -c SHA256SUMS.txt)
+          echo "SIP_RELEASE_DIR=$D" >> "$GITHUB_ENV"
+          echo "SIP_REQUIRE_RELEASE_ASSETS=1" >> "$GITHUB_ENV"
       - name: Run full test & release gates
         run: |
           npm test
           npm run build
-      - name: Publish to npm via OIDC
-        run: npm publish --access public
-      - name: Publish to Official MCP Registry
+          SIP_RELEASE_DIR=/nonexistent_dir SIP_REQUIRE_RELEASE_ASSETS=0 node --test test/v310-redteam-audit.test.mjs test/v311-gold-node2.test.mjs
+      - name: Isolated Tarball Smoke Gate
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pkg-smoke
+          mkdir -p /tmp/pkg-smoke/ext /tmp/pkg-smoke/empty
+          npm pack --pack-destination /tmp/pkg-smoke
+          tar xzf /tmp/pkg-smoke/*.tgz -C /tmp/pkg-smoke/ext
+          P=/tmp/pkg-smoke/ext/package
+          test -f "$P/CLA.md"
+          cd /tmp/pkg-smoke/empty
+          test "$(node "$P/src/cli.mjs" --version)" = "3.1.0"
+          node "$P/src/cli.mjs" selftest --json | node -e "const d=JSON.parse(require('fs').readFileSync(0,'utf8'));if(!d.passed||d.socketsOpened!==0||d.cavpPassed!==9)process.exit(1)"
+          node "$P/src/cli.mjs" demo --json | node -e "const d=JSON.parse(require('fs').readFileSync(0,'utf8'));if(!d.passed)process.exit(1)"
+          node -e "console.log(JSON.stringify({jsonrpc:'2.0',id:1,method:'initialize',params:{protocolVersion:'2025-11-25',capabilities:{},clientInfo:{name:'ci',version:'1'}}})+String.fromCharCode(10)+JSON.stringify({jsonrpc:'2.0',id:2,method:'tools/list',params:{}})+String.fromCharCode(10)+JSON.stringify({jsonrpc:'2.0',id:3,method:'prompts/list',params:{}}))" | node "$P/src/cli.mjs" serve | node -e "const ls=require('fs').readFileSync(0,'utf8').trim().split(String.fromCharCode(10)).map(JSON.parse);const g=(i)=>ls.find((x)=>x.id===i).result;if(g(2).tools.length!==8||g(3).prompts.length!==4)process.exit(1)"
+      - name: Validate server.json via mcp-publisher
         run: |
           set -euo pipefail
           m="$(uname -m)"
           a="$(echo "$m" | sed 's/x86_64/amd64/')"
           a="$(echo "$a" | sed 's/aarch64/arm64/')"
           tar_nm="mcp-publisher_linux_${a}.tar.gz"
-          u="https://github.com/modelcontextprotocol"
-          u="${u}/registry/releases/latest/download"
+          u="https://github.com/modelcontextprotocol/registry/releases/latest/download"
           curl -fsSLO "${u}/${tar_nm}"
           tar xzf "${tar_nm}" mcp-publisher
           chmod +x mcp-publisher
           ./mcp-publisher validate
+      - name: Publish to npm via OIDC
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_live == true }}
+        run: npm publish --provenance --access public
+      - name: Publish to Official MCP Registry
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.publish_live == true }}
+        run: |
+          set -euo pipefail
+          U="https://registry.npmjs.org/@shuliak-corp/sip1-mcp/3.1.0"
+          for i in $(seq 1 12); do
+            curl -fsS "$U" >/dev/null && break
+            sleep 5
+          done
           ./mcp-publisher login github-oidc
           ./mcp-publisher publish

@@ -33,7 +33,7 @@
       "registryType": "mcpb",
       "identifier": "https://github.com/Shuliak11/sip1-mcp-firewall/releases/download/v3.1.0/sip1-enterprise-all-3.1.0.mcpb",
       "version": "3.1.0",
-      "fileSha256": "e4b3afb56c0cb86d945d99d1620dccd82bdf6a221fcb0b54f6ccb0b0232423b3",
+      "fileSha256": "2e11ee87e43553fb18cc4ecab1c79254220daadc13142277bc8a2161da883b86",
       "transport": {
         "type": "stdio"
       }
@@ -42,7 +42,7 @@
       "registryType": "mcpb",
       "identifier": "https://github.com/Shuliak11/sip1-mcp-firewall/releases/download/v3.1.0/sip1-hipaa-clinical-3.1.0.mcpb",
       "version": "3.1.0",
-      "fileSha256": "9e8606063206c4d6c4096f12107e0b31ee706548dc24d14a59bc09a5d2cada51",
+      "fileSha256": "b28a7574c352a7ea8804c0ab161ee190fec1bd75431d36edbe58be0f7df974e7",
       "transport": {
         "type": "stdio"
       }
@@ -51,7 +51,7 @@
       "registryType": "mcpb",
       "identifier": "https://github.com/Shuliak11/sip1-mcp-firewall/releases/download/v3.1.0/sip1-legal-tax-3.1.0.mcpb",
       "version": "3.1.0",
-      "fileSha256": "f39ace2e9f815299684ed6d7b913a2706a7151badab14d911f8f62d40cd42c0b",
+      "fileSha256": "1eb94c09d19dece7a2603bff763ac32fa099aa1d49aeb4e87c8bcabb9c42e7ea",
       "transport": {
         "type": "stdio"
       }
@@ -60,7 +60,7 @@
       "registryType": "mcpb",
       "identifier": "https://github.com/Shuliak11/sip1-mcp-firewall/releases/download/v3.1.0/sip1-pci-dora-3.1.0.mcpb",
       "version": "3.1.0",
-      "fileSha256": "0d850ae29d2670384762ecb919ec4396cf78b3c8f3de0363367b65250e9663d0",
+      "fileSha256": "6168d4f296df2da6a896df8e3437465d7cc084037ead1f52076c53762d5cdc7e",
       "transport": {
         "type": "stdio"
       }

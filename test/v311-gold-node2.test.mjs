@@ -1,3 +1,6 @@
+import {
+  resolveReleaseDir, verifyOfflineMcpbFallback,
+} from './_release-helpers.mjs';
 /**
  * @license Apache-2.0
  * SHULIAK SIP v3.1 Gold Master - Node 2 Battle Suite
@@ -748,7 +751,7 @@ async () => {
 
 test('GM2-10: 4 .mcpb bundles, server.json & SHA256SUMS',
 () => {
-  const relDir = '/root/release-v3.1.0';
+  const relDir = resolveReleaseDir();
   const srv = JSON.parse(
     fs.readFileSync('server.json', 'utf8')
   );
@@ -756,6 +759,7 @@ test('GM2-10: 4 .mcpb bundles, server.json & SHA256SUMS',
     (p) => p.registryType === 'mcpb'
   );
   assert.equal(mcpbPkgs.length, 4);
+  if (!relDir) { verifyOfflineMcpbFallback(); return; }
 
   const sumsTxt = fs.readFileSync(
     path.join(relDir, 'SHA256SUMS.txt'), 'utf8'

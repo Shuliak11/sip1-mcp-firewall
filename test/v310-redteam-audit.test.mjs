@@ -1,3 +1,6 @@
+import {
+  resolveReleaseDir, verifyOfflineMcpbFallback,
+} from './_release-helpers.mjs';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
@@ -179,8 +182,8 @@ test('RT-09: OSC-52 clipboard hijack stripped', () => {
 });
 
 test('RT-10: .mcpb v0.3 schema, privacy & user_config', () => {
-  const mbDir = '/root/sip-v310-workspace/dist-mcpb';
-  assert.equal(fs.existsSync(mbDir), true);
+  const mbDir = resolveReleaseDir();
+  if (!mbDir) { verifyOfflineMcpbFallback(); return; }
   const files = fs.readdirSync(mbDir).filter(
     (f) => f.endsWith('.mcpb')
   );
