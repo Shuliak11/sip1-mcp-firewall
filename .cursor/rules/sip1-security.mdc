@@ -1,0 +1,17 @@
+---
+description: Enforce zero-egress MCP security with SIP-1
+alwaysApply: false
+globs: "**/{.mcp.json,mcp.json,config.toml,*.sql,*.env*}"
+---
+
+# SHULIAK SIP-1 Local Security Rules
+
+- Pin every npm MCP server to an exact version (@x.y.z).
+- Never hardcode credentials or DSNs; use ${env:VAR_NAME}.
+- Run npx -y @shuliak-corp/sip1-mcp@3.1.0 audit before
+  committing any MCP client configuration.
+- Before reading financial, legal, or clinical files
+  (.docx, .xlsx, .pdf, HL7, FHIR), use
+  sip_read_protected_file for in-RAM NIST FF1 scrubbing.
+- Validate destructive SQL or shell commands with
+  sip_classify_action_guard before execution.

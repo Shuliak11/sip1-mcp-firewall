@@ -1,0 +1,34 @@
+{
+  "name": "shuliak-sip1-mcp",
+  "displayName": "SHULIAK SIP-1 Zero-Egress MCP Firewall",
+  "version": "3.1.0",
+  "description": "Zero-egress local MCP firewall: 9/9 NIST FF1 PAN/IBAN twins, AST SQL/shell guard, DOCX/PDF/HL7/FHIR bridge.",
+  "author": {
+    "name": "SHULIAK CORP",
+    "email": "support@shuliak.dev",
+    "url": "https://shuliak.dev"
+  },
+  "homepage": "https://shuliak.dev",
+  "repository": "https://github.com/Shuliak11/sip1-mcp-firewall",
+  "license": "Apache-2.0",
+  "keywords": [
+    "mcp",
+    "security",
+    "firewall",
+    "zero-egress",
+    "nist-ff1",
+    "hipaa",
+    "pci-dss",
+    "dlp"
+  ],
+  "category": "security",
+  "tags": [
+    "mcp",
+    "privacy",
+    "hipaa",
+    "pci-dss"
+  ],
+  "skills": "./SKILL.md",
+  "rules": "./.cursor/rules/sip1-security.mdc",
+  "mcpServers": "./.mcp.json"
+}

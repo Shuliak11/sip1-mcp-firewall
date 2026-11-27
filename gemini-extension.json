@@ -1,0 +1,16 @@
+{
+  "name": "shuliak-sip1-mcp",
+  "version": "3.1.0",
+  "description": "Zero-egress local MCP firewall: 9/9 NIST FF1 PAN/IBAN twins, AST SQL/shell guard, DOCX/PDF/HL7/FHIR bridge.",
+  "mcpServers": {
+    "shuliak-sip1": {
+      "command": "node",
+      "args": [
+        "--no-warnings",
+        "${extensionPath}${/}src${/}cli.mjs",
+        "serve"
+      ],
+      "cwd": "${extensionPath}"
+    }
+  }
+}

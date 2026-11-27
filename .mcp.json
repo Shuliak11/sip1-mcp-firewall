@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "shuliak-sip1": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@shuliak-corp/sip1-mcp@3.1.0",
+        "serve"
+      ],
+      "env": {}
+    }
+  }
+}
