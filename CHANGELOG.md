@@ -1,11 +1,21 @@
 # Changelog
 
-## [2.6.2] - 2026-11-14
-- Added full MCP Inspector handlers (`resources/templates/list`, `resources/read`, `prompts/get`, `completion/complete`, `-32601` fallback) and complete JSON Schema property descriptions for Glama Quality Grade A.
-- Added OCI container labels, `SECURITY.md`, `CONTRIBUTING.md`, and tagged GitHub Release.
+## [3.1.0] - 2026-11-25 (Gold Master)
 
-## [2.6.1] - 2026-11-13
-- Added non-root Alpine `Dockerfile`, MCP tool annotations, and Official MCP Registry `2025-10-17` `server.json`.
-
-## [2.6.0] - 2026-11-13
-- Verified 9/9 official NIST SP 800-38G Rev. 1 (FF1) CAVP vectors and WebCrypto Ed25519 asymmetric offline licensing.
+- **Zero-Egress Local Engine:** Pure Node.js >= 20 ESM,
+  0 runtime dependencies, 0 outbound sockets, **251/251**
+  automated security & cryptographic checks passing.
+- **NIST SP 800-38G Rev. 1 FF1 Twins:** 9/9 official CAVP
+  vectors + 10,000-iteration fuzzing across Luhn PAN,
+  ISO 7064 MOD-97 IBAN, ISO VIN, and ICAO 9303 MRZ with
+  domain-separated tweaks and two-phase slot isolation.
+- **Protocol & Runtime Hardening:** RFC 8785 JCS pinning
+  (0x06), RFC 9162 Merkle inclusion/consistency proofs
+  (0x0B prove), two-phase IFC bus, AST SQL/shell/SSRF
+  guard, orphan process reaper, and shield --apply.
+- **Zero-Dep Office & Clinical Bridge:** In-RAM scrubbing
+  for .docx, .xlsx, .odt, .pdf, HL7 v2, and FHIR R4 with
+  8 MCP tools and 4 desktop prompts.
+- **Distribution & Provenance:** Published to npm with
+  OIDC SLSA v1 provenance, Official MCP Registry, and
+  4 standalone .mcpb v0.3 desktop bundles (SHA256SUMS).
