@@ -1,5 +1,5 @@
 name: 'SHULIAK SIP v3.0 MCP Security Gate'
-description: 'Zero-egress MCP supply-chain risk scanner, RFC 8785 JCS schema lock verifier & GHAS-free PR scorecard (@shuliak-corp/sip1-mcp v3.1.0).'
+description: "Zero-egress MCP config audit, RFC 8785 JCS schema lock, and SARIF/PR security scorecard (0 deps, 0 GHAS seats)."
 author: 'SHULIAK CORP'
 branding:
   icon: 'shield'
